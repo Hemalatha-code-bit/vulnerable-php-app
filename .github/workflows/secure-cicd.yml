@@ -49,7 +49,7 @@ jobs:
           cmd_options: "-r zap_report.html"   # generate HTML report
 
       - name: Upload ZAP DAST Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: zap-scan   # ✅ valid artifact name
           path: zap_report.html
