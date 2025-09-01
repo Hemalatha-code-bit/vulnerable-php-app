@@ -17,7 +17,7 @@ $query = "SELECT * FROM users WHERE username='$username' AND password='$password
 $result = mysqli_query($conn, $query);
 
 if ($result && mysqli_num_rows($result) > 0) {
-    echo "Welcome, " . $username . "!";  // XSS risk
+echo "Welcome, " . htmlentities($username) . "!";
 } else {
     echo "Invalid credentials.";
 }
