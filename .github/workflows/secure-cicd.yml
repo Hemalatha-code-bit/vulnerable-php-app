@@ -1,4 +1,4 @@
-name: SAST Scan for PHP
+name: SAST + DAST Scan for PHP
 
 on:
   push:
@@ -9,7 +9,6 @@ on:
 jobs:
   sast-scan:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -18,3 +17,25 @@ jobs:
         uses: returntocorp/semgrep-action@v1
         with:
           config: "p/php"   # PHP security rules
+
+  dast-scan:
+    runs-on: ubuntu-latest
+    needs: sast-scan   # Run DAST after SAST
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      - name: Start PHP server
+        run: |
+          php -S 0.0.0.0:8000 -t public/ &
+          sleep 5
+
+      - name: Run OWASP ZAP Baseline DAST Scan
+        uses: zaproxy/action-baseline@v0.10.0
+        with:
+          target: "http://localhost:8000"
