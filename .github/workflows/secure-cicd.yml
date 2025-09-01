@@ -53,14 +53,16 @@ jobs:
         with:
           name: zap-scan   # ✅ valid artifact name
           path: zap_report.html
-secret-scan:
-  runs-on: ubuntu-latest
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
 
-    - name: Run TruffleHog (Secret Scan)
-      uses: trufflesecurity/trufflehog@main
-      with:
-        scan: filesystem
-        path: .
+ secret-scan:
+    runs-on: ubuntu-latest
+    needs: [sast-scan, dast-scan]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run TruffleHog (Secret Scanning)
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          github_token: ${{ secrets.GITHUB_TOKEN }}
