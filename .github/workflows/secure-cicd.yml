@@ -45,3 +45,11 @@ jobs:
         uses: zaproxy/action-baseline@v0.10.0
         with:
           target: "http://localhost:8000"
+          allowIssueWriting: false
+          cmd_options: "-r zap_report.html"   # generate HTML report
+
+      - name: Upload ZAP DAST Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: zap-scan   # ✅ valid artifact name
+          path: zap_report.html
