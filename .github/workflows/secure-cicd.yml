@@ -1,16 +1,16 @@
-name: SAST + DAST Scan for PHP
+name: SAST + DAST + Secret Scan for PHP
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+
 permissions:
   contents: write
   security-events: write
   issues: write
   pull-requests: write
-
 
 jobs:
   sast-scan:
@@ -22,11 +22,11 @@ jobs:
       - name: Run Semgrep (SAST)
         uses: returntocorp/semgrep-action@v1
         with:
-          config: "p/php"   # PHP security rules
+          config: "p/php"
 
   dast-scan:
     runs-on: ubuntu-latest
-    needs: sast-scan   # Run DAST after SAST
+    needs: sast-scan
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -46,15 +46,15 @@ jobs:
         with:
           target: "http://localhost:8000"
           allowIssueWriting: false
-          cmd_options: "-r zap_report.html"   # generate HTML report
+          cmd_options: "-r zap_report.html"
 
       - name: Upload ZAP DAST Report
         uses: actions/upload-artifact@v4
         with:
-          name: zap-scan   # ✅ valid artifact name
+          name: zap-scan
           path: zap_report.html
 
- secret-scan:
+  secret-scan:   # ✅ Correctly aligned
     runs-on: ubuntu-latest
     needs: [sast-scan, dast-scan]
     steps:
