@@ -1,0 +1,12 @@
+{
+  "name": "demo/vulnerable-php-app",
+  "description": "Intentionally vulnerable PHP app for DevSecOps demo",
+  "require": {
+    "php": ">=7.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  }
+}
